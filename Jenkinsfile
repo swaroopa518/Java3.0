@@ -110,7 +110,7 @@ pipeline{
                }
             }
         }  ***/
-        stage('Configure Artifactory : JFrog'){
+        stage('archiveArtifacts : JFrog'){
          when { expression {  params.action == 'create' } }
             steps{
                script{

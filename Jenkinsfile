@@ -2,7 +2,7 @@
 
 pipeline{
 
-    agent { label 'Demo' }
+    agent any
 
     parameters{
 
@@ -106,6 +106,22 @@ pipeline{
                    
                    dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
                }
+            }
+        }  
+        stage('Configure Artifactory'){
+         when { expression {  params.action == 'create' } }
+            steps{
+               script{
+          
+                  def userInput = input(
+                  id: 'userInput', message: 'Enter password for Artifactory', parameters: [
+             
+                 [$class: 'TextParameterDefinition', defaultValue: 'password', description: 'Artifactory Password', name: 'password']])
+             
+                 bat 'jfrog rt c artifactory-demo --url=http://34.68.191.118:8081/artifactory --user=admin --password='+userInput
+             
+                  echo '********* Configure Artifactory Finished **********'
+             }
             }
         }      
     }

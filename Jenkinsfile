@@ -7,9 +7,11 @@ pipeline{
     parameters{
 
         choice(name: 'action', choices: 'create\ndelete', description: 'Choose create/Destroy')
-        string(name: 'ImageName', description: "name of the docker build", defaultValue: 'javapp')
-        string(name: 'ImageTag', description: "tag of the docker build", defaultValue: 'v1')
-        string(name: 'DockerHubUser', description: "name of the Application", defaultValue: 'swaroopab')
+       // string(name: 'ImageName', description: "name of the docker build", defaultValue: 'javapp')
+        //string(name: 'ImageTag', description: "tag of the docker build", defaultValue: 'v1')
+        //string(name: 'DockerHubUser', description: "name of the Application", defaultValue: 'swaroopab')
+        string(name: 'JfrogUser', description: "Artifactory Username", defaultValue: 'admin')
+        string(name: 'JfrogPassword', description: "Artifactory Password", defaultValue: 'password')
     }
 
     stages{
@@ -72,7 +74,7 @@ pipeline{
                }
             }
         }
-        stage('Docker Image Build'){
+       /*** stage('Docker Image Build'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
@@ -107,20 +109,21 @@ pipeline{
                    dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
                }
             }
-        }  
-        stage('Configure Artifactory'){
+        }  ***/
+        stage('Configure Artifactory : JFrog'){
          when { expression {  params.action == 'create' } }
             steps{
                script{
-          
-                  def userInput = input(
-                  id: 'userInput', message: 'Enter password for Artifactory', parameters: [
+                   
+                   def JFrogcredentialsId = 'jfrog-api'
+                   JFrogStatus(JFrogcredentialsId)
+                  //def userInput = input(
+                 // id: 'userInput', message: 'Enter password for Artifactory', parameters: [
              
-                 [$class: 'TextParameterDefinition', defaultValue: 'password', description: 'Artifactory Password', name: 'password']])
+                // [$class: 'TextParameterDefinition', defaultValue: 'password', description: 'Artifactory Password', name: 'password']])
              
-                 bat 'jfrog rt c artifactory-demo --url=http://34.68.191.118:8081/artifactory --user=admin --password='+userInput
+                // bat 'jfrog rt c artifactory-demo --url=http://34.68.191.118:8081/artifactory --user=admin --password='+userInput
              
-                  echo '********* Configure Artifactory Finished **********'
              }
             }
         }      

@@ -111,19 +111,14 @@ pipeline{
             }
         }  
         stage('Push artifacts into artifactory') {
-            steps {
-              rtUpload (
-                serverId: 'my-artifactory',
-                spec: '''{
-                      "files": [
-                        {
-                          "pattern": "*.jar",
-                          "target": "java-web-app/build-files/"
-                        }
-                    ]
-                }'''
-              )
-          }
-        }
+            when { expression {  params.action == 'create' } }
+            steps{
+               script{
+                  def JFrogcredentialsId = 'my-artifactory'
+                   JFrogStatus(JFrogcredentialsId) 
+                   
+               }
+            }
+        }  
     }
 }

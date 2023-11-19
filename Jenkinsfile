@@ -110,15 +110,20 @@ pipeline{
                }
             }
         }  
-         stage('archiveArtifacts : JFrog'){
-          when { expression {  params.action == 'create' } }
-             steps{
-               script{
- 
-                   JFrogStatus()
-               }
-            }
-            
-        }      
+        stage('Push artifacts into artifactory') {
+            steps {
+              rtUpload (
+                serverId: 'my-artifactory',
+                spec: '''{
+                      "files": [
+                        {
+                          "pattern": "*.jar",
+                          "target": "java-web-app/build-files/"
+                        }
+                    ]
+                }'''
+              )
+          }
+        }
     }
 }

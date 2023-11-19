@@ -115,7 +115,6 @@ pipeline{
              steps{
                script{
  
-                   def JFrogcredentialsId = 'jfrog-api'
                    JFrogStatus(JFrogcredentialsId)
                }
             }

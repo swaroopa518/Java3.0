@@ -115,7 +115,7 @@ pipeline{
              steps{
                script{
  
-                   JFrogStatus(JFrogcredentialsId)
+                   JFrogStatus()
                }
             }
             

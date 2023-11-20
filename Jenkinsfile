@@ -74,6 +74,15 @@ pipeline{
                }
             }
         }
+        stage('Push artifacts into artifactory : JFrog') {
+            when { expression {  params.action == 'create' } }
+            steps{
+               script{
+                  JFrogStatus() 
+                   
+               }
+            }
+         }  
          stage('Docker Image Build'){
          when { expression {  params.action == 'create' } }
             steps{
@@ -107,15 +116,6 @@ pipeline{
                script{
                    
                    dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.DockerHubUser}")
-               }
-            }
-        }  
-        stage('Push artifacts into artifactory') {
-            when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                  JFrogStatus() 
-                   
                }
             }
         }  
